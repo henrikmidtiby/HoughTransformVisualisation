@@ -29,6 +29,32 @@
         context.lineTo(x, y);
         context.stroke(); 
       }
+      function drawCurveInHoughSpace(canvas, x, y) {
+        var context = canvas.getContext('2d');
+        context.beginPath();
+        var houghCoordinates = houghToCanvasCoordinates(canvas, 0, 0);
+        context.moveTo(houghCoordinates.canvasR, houghCoordinates.canvasTheta);
+        for(var theta = 0.0; theta < 3; theta = theta + 0.1)
+        {
+          var r = x * Math.cos(theta) + y * Math.sin(theta);
+          var houghCoordinates = houghToCanvasCoordinates(canvas, r, theta);
+          context.lineTo(houghCoordinates.canvasR, houghCoordinates.canvasTheta);
+        }
+        context.stroke(); 
+      }
+      function houghToCanvasCoordinates(canvas, r, theta)
+      {
+        var dimensionOfImageCanvas = 600;
+        var rLow = -Math.sqrt(2)*dimensionOfImageCanvas;
+        var rHigh = Math.sqrt(2)*dimensionOfImageCanvas;
+        var rValue = canvas.height * (r - rLow) / (rHigh - rLow);
+
+        var thetaValue = canvas.width * theta / 3.141592;
+        return {
+          canvasR: rValue,
+          canvasTheta: thetaValue
+        };
+      }
       function writeMessage(canvas, message) {
         var context = canvas.getContext('2d');
         context.font = '18pt Calibri';
@@ -52,9 +78,9 @@
         clearCanvas(canvasHoughSpace);
         var mousePos = getMousePos(canvasImageSpace, evt);
         var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
-        writeMessage(canvasImageSpace, message);
-        drawLineOnCanvas(canvasHoughSpace, mousePos.x, mousePos.y);
+        // writeMessage(canvasImageSpace, message);
         drawLineOnCanvas(canvasImageSpace, mousePos.x, mousePos.y);
+        drawCurveInHoughSpace(canvasHoughSpace, mousePos.x, mousePos.y);
       }, false);
     </script>
   </body>
