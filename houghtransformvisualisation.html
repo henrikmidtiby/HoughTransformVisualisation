@@ -29,18 +29,21 @@
         context.lineTo(x, y);
         context.stroke(); 
       }
-      function drawPoint(x, y, canvas){
-        canvas.fillRect(x,y,1,1);
+      function drawPoint(x, y, context){
+        context.beginPath();
+        context.moveTo(x-1, y-1);
+        context.lineTo(x+1, y+1);
+        context.stroke(); 
+        context.fillRect(x - 2, y - 2, 4, 4);
       }
       function drawStoredPointsOnCanvas(canvas) {
         var context = canvas.getContext('2d');
         var i = 0;
         var len = listOfPoints.length;
-        alert(len);
         for (; i < len; ) { 
           var point = listOfPoints[i];
-          alert([point.x, point.y]);
-          drawPoint(point.x, point.y, canvas);
+          drawPoint(point.x, point.y, context);
+          drawCurveInHoughSpace(canvasHoughSpace, point.x, point.y);
           i++;
         }
       }
