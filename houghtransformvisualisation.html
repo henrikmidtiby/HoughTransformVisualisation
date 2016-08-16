@@ -6,14 +6,22 @@
         margin: 0px;
         padding: 0px;
       }
-      #myCanvas {
+      #myCanvasImageSpace {
         border: 1px solid black;
+      }
+      #myCanvasHoughSpace {
+        border: 1px solid red;
       }
     </style>
   </head>
   <body>
-    <canvas id="myCanvas" width="600" height="600"></canvas>
+    <canvas id="myCanvasImageSpace" width="600" height="600"></canvas>
+    <canvas id="myCanvasHoughSpace" width="600" height="600"></canvas>
     <script>
+      function clearCanvas(canvas) {
+        var context = canvas.getContext('2d');
+        context.clearRect(0, 0, canvas.width, canvas.height);
+      }
       function drawLineOnCanvas(canvas, x, y) {
         var context = canvas.getContext('2d');
         context.beginPath();
@@ -23,7 +31,6 @@
       }
       function writeMessage(canvas, message) {
         var context = canvas.getContext('2d');
-        context.clearRect(0, 0, canvas.width, canvas.height);
         context.font = '18pt Calibri';
         context.fillStyle = 'black';
         context.fillText(message, 10, 25);
@@ -35,14 +42,19 @@
           y: evt.clientY - rect.top
         };
       }
-      var canvas = document.getElementById('myCanvas');
-      var context = canvas.getContext('2d');
+      var canvasImageSpace = document.getElementById('myCanvasImageSpace');
+      var canvasHoughSpace = document.getElementById('myCanvasHoughSpace');
+      var context = canvasImageSpace.getContext('2d');
+      var contextHough = canvasHoughSpace.getContext('2d');
 
-      canvas.addEventListener('mousemove', function(evt) {
-        var mousePos = getMousePos(canvas, evt);
+      canvasImageSpace.addEventListener('mousemove', function(evt) {
+        clearCanvas(canvasImageSpace);
+        clearCanvas(canvasHoughSpace);
+        var mousePos = getMousePos(canvasImageSpace, evt);
         var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
-        writeMessage(canvas, message);
-        drawLineOnCanvas(canvas, mousePos.x, mousePos.y);
+        writeMessage(canvasImageSpace, message);
+        drawLineOnCanvas(canvasHoughSpace, mousePos.x, mousePos.y);
+        drawLineOnCanvas(canvasImageSpace, mousePos.x, mousePos.y);
       }, false);
     </script>
   </body>
