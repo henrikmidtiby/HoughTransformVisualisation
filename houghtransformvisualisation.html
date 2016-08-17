@@ -36,14 +36,26 @@
         context.stroke(); 
         context.fillRect(x - 2, y - 2, 4, 4);
       }
-      function drawStoredPointsOnCanvas(canvas) {
-        var context = canvas.getContext('2d');
+      function drawStoredPointsOnCanvas() {
+        var context = canvasImageSpace.getContext('2d');
         var i = 0;
         var len = listOfPoints.length;
         for (; i < len; ) { 
           var point = listOfPoints[i];
           drawPoint(point.x, point.y, context);
           drawCurveInHoughSpace(canvasHoughSpace, point.x, point.y);
+          i++;
+        }
+      }
+      function drawStoredLinesOnCanvas() {
+        var context = canvasHoughSpace.getContext('2d');
+        var i = 0;
+        var len = listOfPointsInHoughSpace.length;
+        for (; i < len; ) { 
+          var point = listOfPointsInHoughSpace[i];
+          drawPoint(point.x, point.y, context);
+          var houghCoordinates = canvasToHoughCoordinates(canvasHoughSpace, point.y, point.x);
+          drawLineInImageSpace(canvasImageSpace, houghCoordinates.houghR, houghCoordinates.houghTheta);
           i++;
         }
       }
@@ -126,12 +138,14 @@
         clearCanvas(canvasImageSpace);
         clearCanvas(canvasHoughSpace);
         drawStoredPointsOnCanvas(canvasImageSpace);
+      	drawStoredLinesOnCanvas();
       }
       var canvasImageSpace = document.getElementById('myCanvasImageSpace');
       var canvasHoughSpace = document.getElementById('myCanvasHoughSpace');
       var context = canvasImageSpace.getContext('2d');
       var contextHough = canvasHoughSpace.getContext('2d');
       var listOfPoints = [];
+      var listOfPointsInHoughSpace = [];
 
       canvasImageSpace.addEventListener('mousemove', function(evt) {
         drawBackgroundElements();
@@ -147,6 +161,10 @@
       canvasImageSpace.addEventListener('mousedown', function(evt) {
         var mousePos = getMousePos(canvasImageSpace, evt);
         listOfPoints.push(mousePos);
+      }, false);
+      canvasHoughSpace.addEventListener('mousedown', function(evt) {
+        var mousePos = getMousePos(canvasHoughSpace, evt);
+        listOfPointsInHoughSpace.push(mousePos);
       }, false);
     </script>
   </body>
