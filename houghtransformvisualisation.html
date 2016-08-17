@@ -88,6 +88,11 @@
           y: evt.clientY - rect.top
         };
       }
+      function drawBackgroundElements() {
+        clearCanvas(canvasImageSpace);
+        clearCanvas(canvasHoughSpace);
+        drawStoredPointsOnCanvas(canvasImageSpace);
+      }
       var canvasImageSpace = document.getElementById('myCanvasImageSpace');
       var canvasHoughSpace = document.getElementById('myCanvasHoughSpace');
       var context = canvasImageSpace.getContext('2d');
@@ -95,14 +100,9 @@
       var listOfPoints = [];
 
       canvasImageSpace.addEventListener('mousemove', function(evt) {
-        clearCanvas(canvasImageSpace);
-        clearCanvas(canvasHoughSpace);
+        drawBackgroundElements();
         var mousePos = getMousePos(canvasImageSpace, evt);
-        var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
-        // writeMessage(canvasImageSpace, message);
-        drawLineOnCanvas(canvasImageSpace, mousePos.x, mousePos.y);
         drawCurveInHoughSpace(canvasHoughSpace, mousePos.x, mousePos.y);
-        drawStoredPointsOnCanvas(canvasImageSpace);
       }, false);
       canvasImageSpace.addEventListener('mousedown', function(evt) {
         var mousePos = getMousePos(canvasImageSpace, evt);
