@@ -30,10 +30,6 @@
         context.stroke(); 
       }
       function drawPoint(x, y, context){
-        context.beginPath();
-        context.moveTo(x-1, y-1);
-        context.lineTo(x+1, y+1);
-        context.stroke(); 
         context.fillRect(x - 2, y - 2, 4, 4);
       }
       function drawStoredPointsOnCanvas() {
