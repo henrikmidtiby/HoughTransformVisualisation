@@ -15,8 +15,16 @@
     </style>
   </head>
   <body>
+    <h1>Interactive hough transform demonstration</h1>
+    <p>Demonstration developed by Henrik Skov Midtiby, hemi@mmmi.sdu.dk</p>
+    <div style="float: left;">
+    <h3>Image space</h3>
     <canvas id="myCanvasImageSpace" width="600" height="600"></canvas>
+    </div>
+    <div style="float: left;">
+    <h3>Hough space</h3>
     <canvas id="myCanvasHoughSpace" width="600" height="600"></canvas>
+    </div>
     <script>
       function clearCanvas(canvas) {
         var context = canvas.getContext('2d');
