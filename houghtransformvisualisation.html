@@ -47,6 +47,27 @@
           i++;
         }
       }
+      function drawLineInImageSpace(canvas, r, theta) {
+        if(Math.abs(Math.cos(theta)) > Math.abs(Math.sin(theta)))
+        {
+          var ystart = 0;
+          var yend = canvas.height;
+          var xstart = (r - ystart * Math.sin(theta)) / Math.cos(theta);
+          var xend = (r - yend * Math.sin(theta)) / Math.cos(theta);
+        }
+        else
+        {
+          var xstart = 0;
+          var xend = canvas.width;
+          var ystart = (r - xstart * Math.cos(theta)) / Math.sin(theta);
+          var yend = (r - xend * Math.cos(theta)) / Math.sin(theta);
+        }
+        var context = canvas.getContext('2d');
+        context.beginPath();
+        context.moveTo(xstart, ystart);
+        context.lineTo(xend, yend);
+        context.stroke(); 
+      }
       function drawCurveInHoughSpace(canvas, x, y) {
         var context = canvas.getContext('2d');
         context.beginPath();
@@ -61,6 +82,19 @@
           context.lineTo(houghCoordinates.canvasTheta, houghCoordinates.canvasR);
         }
         context.stroke(); 
+      }
+      function canvasToHoughCoordinates(canvas, r, theta)
+      {
+        var dimensionOfImageCanvas = 600;
+        var rLow = -Math.sqrt(2)*dimensionOfImageCanvas;
+        var rHigh = Math.sqrt(2)*dimensionOfImageCanvas;
+        var rValue = rLow + r * (rHigh - rLow) / canvas.height;
+
+        var thetaValue = theta * 3.141592 / canvas.width;
+        return {
+          houghR: rValue,
+          houghTheta: thetaValue
+        };
       }
       function houghToCanvasCoordinates(canvas, r, theta)
       {
@@ -103,6 +137,12 @@
         drawBackgroundElements();
         var mousePos = getMousePos(canvasImageSpace, evt);
         drawCurveInHoughSpace(canvasHoughSpace, mousePos.x, mousePos.y);
+      }, false);
+      canvasHoughSpace.addEventListener('mousemove', function(evt) {
+        drawBackgroundElements();
+        var mousePos = getMousePos(canvasHoughSpace, evt);
+        var houghCoordinates = canvasToHoughCoordinates(canvasHoughSpace, mousePos.y, mousePos.x);
+        drawLineInImageSpace(canvasImageSpace, houghCoordinates.houghR, houghCoordinates.houghTheta);
       }, false);
       canvasImageSpace.addEventListener('mousedown', function(evt) {
         var mousePos = getMousePos(canvasImageSpace, evt);
